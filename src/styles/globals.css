@@ -49,7 +49,6 @@ html {
   font-size: 18px;
   line-height: 32px;
 
-  background: rgb(0, 0, 0);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -279,4 +278,48 @@ svg {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* --- LIST SUPPORT FOR PAYLOAD RICHTEXT --- */
+ul.list-bullet {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
+
+ol.list-number {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* --- HEADINGS & TEXT (если Tailwind Prose не срабатывает) --- */
+.payload-richtext h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+}
+
+.payload-richtext h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 1.25rem 0 1rem;
+}
+
+.payload-richtext p {
+  margin: 1rem 0;
+  line-height: 1.75rem;
+}
+
+.payload-richtext a {
+  color: blue;
+  text-decoration: underline;
+}
+
+.payload-richtext strong {
+  font-weight: 600;
 }
