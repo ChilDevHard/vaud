@@ -4,7 +4,8 @@ import config from '@payload-config'
 import { RichText } from '@/components/layout/richtext'
 import type { Page } from '../../../payload-types'
 
-export default async function PageBySlug({ params }: { params: { slug?: string } }) {
+export default async function PageBySlug(props: { params: Promise<{ slug?: string }> }) {
+  const params = await props.params
   if (!params?.slug) return notFound()
 
   const payload = await getPayload({ config })
