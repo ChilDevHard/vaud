@@ -56,15 +56,15 @@ html,
 body,
 #app {
   height: 100%;
+  
 }
 
 body {
   font-family: system-ui;
   font-size: 18px;
   line-height: 32px;
-
   margin: 0;
-
+  overflow-y: scroll;
   @media (max-width: 1024px) {
     font-size: 15px;
     line-height: 24px;
