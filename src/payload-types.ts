@@ -67,6 +67,9 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    companies: Company;
+    jobOffers: JobOffer;
+    managers: Manager;
     media: Media;
     pages: Page;
     users: User;
@@ -77,6 +80,9 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    companies: CompaniesSelect<false> | CompaniesSelect<true>;
+    jobOffers: JobOffersSelect<false> | JobOffersSelect<true>;
+    managers: ManagersSelect<false> | ManagersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -116,6 +122,188 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "companies".
+ */
+export interface Company {
+  id: string;
+  /**
+   * Visible au public
+   */
+  name: string;
+  general: {
+    legalName: string;
+    /**
+     * Visible au public
+     */
+    tva: string;
+    code?: string | null;
+    /**
+     * Visible au public
+     */
+    website?: string | null;
+    /**
+     * Visible au public
+     */
+    description?: string | null;
+  };
+  recruiters?: (string | Manager)[] | null;
+  address: {
+    street: string;
+    number: string;
+    postcode: string;
+    city: string;
+  };
+  contactPrivate?: {
+    phone?: string | null;
+    email?: string | null;
+    googleLink?: string | null;
+    privateNotes?:
+      | {
+          note?: string | null;
+          date?: string | null;
+          addedBy?: (string | null) | User;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  validated?: boolean | null;
+  validationNotice?: string | null;
+  validationDate?: string | null;
+  blocked?: boolean | null;
+  blockReasons?:
+    | {
+        reason?: string | null;
+        date?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "managers".
+ */
+export interface Manager {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  active?: boolean | null;
+  blocked?: boolean | null;
+  privateNotes?:
+    | {
+        note?: string | null;
+        date?: string | null;
+        addedBy?: (string | null) | User;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobOffers".
+ */
+export interface JobOffer {
+  id: string;
+  company: string | Company;
+  location?: {
+    address?: string | null;
+    postcode?: string | null;
+    city?: string | null;
+  };
+  title: string;
+  modeOfWork?: ('on-site' | 'hybrid' | 'remote') | null;
+  occupancy?: {
+    min?: number | null;
+    max?: number | null;
+  };
+  salary?: {
+    min?: number | null;
+    max?: number | null;
+    class?: number | null;
+    classLink?: string | null;
+  };
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  requirements?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  requirementsPlus?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  hiringSteps?:
+    | {
+        stepName?: string | null;
+        dueDate?: string | null;
+        completed?: boolean | null;
+        comments?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  manager: string | Manager;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -174,23 +362,6 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
-}
-/**
  * Clé unique + valeurs par langue.  Modifiable depuis le back-office.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -211,6 +382,18 @@ export interface Translation {
 export interface PayloadLockedDocument {
   id: string;
   document?:
+    | ({
+        relationTo: 'companies';
+        value: string | Company;
+      } | null)
+    | ({
+        relationTo: 'jobOffers';
+        value: string | JobOffer;
+      } | null)
+    | ({
+        relationTo: 'managers';
+        value: string | Manager;
+      } | null)
     | ({
         relationTo: 'media';
         value: string | Media;
@@ -268,6 +451,126 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "companies_select".
+ */
+export interface CompaniesSelect<T extends boolean = true> {
+  name?: T;
+  general?:
+    | T
+    | {
+        legalName?: T;
+        tva?: T;
+        code?: T;
+        website?: T;
+        description?: T;
+      };
+  recruiters?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        number?: T;
+        postcode?: T;
+        city?: T;
+      };
+  contactPrivate?:
+    | T
+    | {
+        phone?: T;
+        email?: T;
+        googleLink?: T;
+        privateNotes?:
+          | T
+          | {
+              note?: T;
+              date?: T;
+              addedBy?: T;
+              id?: T;
+            };
+      };
+  validated?: T;
+  validationNotice?: T;
+  validationDate?: T;
+  blocked?: T;
+  blockReasons?:
+    | T
+    | {
+        reason?: T;
+        date?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobOffers_select".
+ */
+export interface JobOffersSelect<T extends boolean = true> {
+  company?: T;
+  location?:
+    | T
+    | {
+        address?: T;
+        postcode?: T;
+        city?: T;
+      };
+  title?: T;
+  modeOfWork?: T;
+  occupancy?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+      };
+  salary?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        class?: T;
+        classLink?: T;
+      };
+  description?: T;
+  requirements?: T;
+  requirementsPlus?: T;
+  hiringSteps?:
+    | T
+    | {
+        stepName?: T;
+        dueDate?: T;
+        completed?: T;
+        comments?: T;
+        id?: T;
+      };
+  manager?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "managers_select".
+ */
+export interface ManagersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  email?: T;
+  phone?: T;
+  active?: T;
+  blocked?: T;
+  privateNotes?:
+    | T
+    | {
+        note?: T;
+        date?: T;
+        addedBy?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -11,6 +11,9 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Translations } from './collections/Translations'
 import Pages from './collections/Pages'
+import Managers from './collections/Managers'
+import JobOffers from './collections/JobOffers'
+import Companies from './collections/Companies'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,7 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Media, Pages, Users, Translations],
+  collections: [Companies, JobOffers, Managers, Media, Pages, Users, Translations],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
