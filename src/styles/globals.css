@@ -1,3 +1,5 @@
+
+
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -53,7 +55,7 @@ html {
 }
 
 body {
-  font-family: system-ui;
+  @apply font-sans;
   font-size: 18px;
   line-height: 32px;
   margin: 0;

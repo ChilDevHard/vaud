@@ -1,9 +1,11 @@
-import typography from '@tailwindcss/typography'
-
-export default {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}', './styles/globals.css'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
+      },
+    },
   },
-  plugins: [typography],
+  plugins: [require('tw-animate-css')],
 }

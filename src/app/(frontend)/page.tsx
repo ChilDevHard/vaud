@@ -5,18 +5,18 @@ import React from 'react'
 import config from '@/payload.config'
 
 import '@styles/globals.css'
+import BannerText from '@/components/custom/BannerText'
 
 export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  // const { user } = await payload.auth({ headers })
 
   return (
     <>
       <main className="container" style={{ padding: '4rem 1rem', textAlign: 'center' }}>
-        {!user && <h1>Welcome back, unknown</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
+        <BannerText />
       </main>
     </>
   )
