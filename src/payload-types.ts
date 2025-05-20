@@ -149,25 +149,11 @@ export interface Company {
      */
     description?: string | null;
   };
-  recruiters?: (string | Manager)[] | null;
   address: {
     street: string;
     number: string;
     postcode: string;
     city: string;
-  };
-  contactPrivate?: {
-    phone?: string | null;
-    email?: string | null;
-    googleLink?: string | null;
-    privateNotes?:
-      | {
-          note?: string | null;
-          date?: string | null;
-          addedBy?: (string | null) | User;
-          id?: string | null;
-        }[]
-      | null;
   };
   validated?: boolean | null;
   validationNotice?: string | null;
@@ -180,6 +166,20 @@ export interface Company {
         id?: string | null;
       }[]
     | null;
+  contactPrivate?: {
+    recruiters?: (string | Manager)[] | null;
+    phone?: string | null;
+    email?: string | null;
+    googleLink?: string | null;
+    privateNotes?:
+      | {
+          note?: string | null;
+          date?: string | null;
+          addedBy?: (string | null) | User;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -191,8 +191,14 @@ export interface Manager {
   id: string;
   firstName: string;
   lastName: string;
+  /**
+   * Visible au public
+   */
   email: string;
-  phone?: string | null;
+  /**
+   * Visible au public
+   */
+  phonePublic?: string | null;
   active?: boolean | null;
   blocked?: boolean | null;
   privateNotes?:
@@ -203,6 +209,15 @@ export interface Manager {
         id?: string | null;
       }[]
     | null;
+  contactPrivate: {
+    company: string | Company;
+    function: string;
+    /**
+     * Que pour les contacts internes
+     */
+    phonePrivate?: string | null;
+    emailPublic?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -467,7 +482,6 @@ export interface CompaniesSelect<T extends boolean = true> {
         website?: T;
         description?: T;
       };
-  recruiters?: T;
   address?:
     | T
     | {
@@ -475,21 +489,6 @@ export interface CompaniesSelect<T extends boolean = true> {
         number?: T;
         postcode?: T;
         city?: T;
-      };
-  contactPrivate?:
-    | T
-    | {
-        phone?: T;
-        email?: T;
-        googleLink?: T;
-        privateNotes?:
-          | T
-          | {
-              note?: T;
-              date?: T;
-              addedBy?: T;
-              id?: T;
-            };
       };
   validated?: T;
   validationNotice?: T;
@@ -501,6 +500,22 @@ export interface CompaniesSelect<T extends boolean = true> {
         reason?: T;
         date?: T;
         id?: T;
+      };
+  contactPrivate?:
+    | T
+    | {
+        recruiters?: T;
+        phone?: T;
+        email?: T;
+        googleLink?: T;
+        privateNotes?:
+          | T
+          | {
+              note?: T;
+              date?: T;
+              addedBy?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
@@ -558,7 +573,7 @@ export interface ManagersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   email?: T;
-  phone?: T;
+  phonePublic?: T;
   active?: T;
   blocked?: T;
   privateNotes?:
@@ -568,6 +583,14 @@ export interface ManagersSelect<T extends boolean = true> {
         date?: T;
         addedBy?: T;
         id?: T;
+      };
+  contactPrivate?:
+    | T
+    | {
+        company?: T;
+        function?: T;
+        phonePrivate?: T;
+        emailPublic?: T;
       };
   updatedAt?: T;
   createdAt?: T;
