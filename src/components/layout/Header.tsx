@@ -1,8 +1,10 @@
 import Link from 'next/link'
+import NotificationStripe from '@/components/custom/NotificationStripe'
 
 export default function Header() {
   return (
     <header className="w-full bg-[#009B4D] text-white shadow-md">
+      <NotificationStripe />
       <nav className="container mx-auto flex h-14 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="text-lg font-semibold tracking-tight">
