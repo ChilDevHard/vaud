@@ -387,6 +387,8 @@ export interface Translation {
   key: string;
   fr: string;
   en?: string | null;
+  de?: string | null;
+  it?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -657,6 +659,8 @@ export interface TranslationsSelect<T extends boolean = true> {
   key?: T;
   fr?: T;
   en?: T;
+  de?: T;
+  it?: T;
   updatedAt?: T;
   createdAt?: T;
 }

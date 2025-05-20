@@ -8,6 +8,8 @@ export const Translations: CollectionConfig = {
   admin: {
     description: 'Clé unique + valeurs par langue.  Modifiable depuis le back-office.',
     useAsTitle: 'key',
+    group: 'dev',
+    defaultColumns: ['fr', 'key'],
   },
   access: { read: () => true },
   fields: [
@@ -30,6 +32,17 @@ export const Translations: CollectionConfig = {
       label: 'English',
       required: false,
     },
-    // Ajoute d’autres langues si besoin…
+    {
+      name: 'de',
+      type: 'text',
+      label: 'Deutsch',
+      required: false,
+    },
+    {
+      name: 'it',
+      type: 'text',
+      label: 'Italiano',
+      required: false,
+    },
   ],
 }
