@@ -6,6 +6,8 @@ import config from '@/payload.config'
 
 import '@styles/globals.css'
 import BannerText from '@/components/custom/BannerText'
+import { t } from '@/lib/i18n'
+const transparency_slogan = await t('transparency_slogan', 'fr')
 
 export default async function HomePage() {
   const payloadConfig = await config
@@ -14,7 +16,7 @@ export default async function HomePage() {
   return (
     <>
       <main className="container" style={{ padding: '4rem 1rem', textAlign: 'center' }}>
-        <BannerText />
+        <BannerText slogan={`${transparency_slogan}`} />
       </main>
     </>
   )
