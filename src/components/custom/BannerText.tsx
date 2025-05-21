@@ -3,79 +3,102 @@
 import { motion, useAnimation } from 'framer-motion';
 import { useEffect } from 'react';
 
-const sentenceVariants = {
-  hidden: { opacity: 1 }, // Stays visible, orchestrates children
-  visible: {
-    opacity: 1,
-    transition: {
-      delay: 0.5, // Delay before animation starts
-      staggerChildren: 0.15, // Time between each child animation (appearance)
-      delayChildren: 0.2,    // Delay before children start their 'exit' animation
-      staggerDirection: 1    // Forwards for appearance
-    },
-  },
-  exit: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      staggerDirection: -1 // Backwards for disappearance, or adjust logic
-    }
-  }
-};
-
-const wordVariants = {
-  hidden: { opacity: 0, x: -20, transition: { duration: 0.3, ease: "easeOut" } },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
-  exit: { opacity: 0, x: 20, transition: { duration: 0.4, ease: "easeIn" } }
-};
-
 export default function BannerText({ slogan }: { slogan: string }) {
-  const words = slogan.split(' ');
+  const WORD_APPEAR_DURATION = 2; 
+  const WORD_EXIT_DURATION = 0.4; 
+  const WORD_X_OFFSET = 20; 
+  const WORD_APPEAR_EASE = "easeOut";
+  const WORD_EXIT_EASE = "easeIn";
+
+  const STAGGER_CHILDREN_APPEAR = 0.15; 
+  const STAGGER_CHILDREN_EXIT = 0.1; 
+
+  const SENTENCE_INITIAL_DELAY = 2.5; 
+  const SENTENCE_VISIBLE_HOLD_ADDITIONAL = 0.5; 
+  const SENTENCE_EXIT_HOLD_ADDITIONAL = 0.5; 
+  const SENTENCE_LOOP_RESTART_PAUSE = 0.1; 
+
+  const LOOP_ANIMATION = true; 
+
+  const sentenceVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: SENTENCE_INITIAL_DELAY,
+        staggerChildren: STAGGER_CHILDREN_APPEAR,
+        delayChildren: 0.2, 
+        staggerDirection: 1
+      },
+    },
+    exit: {
+      opacity: 1,
+      transition: {
+        staggerChildren: STAGGER_CHILDREN_EXIT,
+        staggerDirection: -1
+      }
+    }
+  };
+
+  const wordVariants = {
+    hidden: { opacity: 0, x: -WORD_X_OFFSET, transition: { duration: WORD_APPEAR_DURATION, ease: WORD_APPEAR_EASE } },
+    visible: { opacity: 1, x: 0, transition: { duration: WORD_APPEAR_DURATION, ease: WORD_APPEAR_EASE } },
+    exit: { opacity: 0, x: WORD_X_OFFSET, transition: { duration: WORD_EXIT_DURATION, ease: WORD_EXIT_EASE } }
+  };
+
+  const words = slogan?.split(' ') || [];
   const controls = useAnimation();
 
   useEffect(() => {
     const sequence = async () => {
+      await controls.start('visible');
+      const visibleDurationMs = (SENTENCE_INITIAL_DELAY * 1000) + 
+                                (words.length * STAGGER_CHILDREN_APPEAR * 1000) +
+                                (WORD_APPEAR_DURATION * 1000) +
+                                (SENTENCE_VISIBLE_HOLD_ADDITIONAL * 1000);
+      await new Promise(resolve => setTimeout(resolve, visibleDurationMs - (SENTENCE_INITIAL_DELAY * 1000) ));
+
+
+      await controls.start('exit');
+      const exitDurationMs = (words.length * STAGGER_CHILDREN_EXIT * 1000) +
+                               (WORD_EXIT_DURATION * 1000) +
+                               (SENTENCE_EXIT_HOLD_ADDITIONAL * 1000);
+      await new Promise(resolve => setTimeout(resolve, exitDurationMs));
+      
+      await controls.start('hidden'); 
+      await new Promise(resolve => setTimeout(resolve, SENTENCE_LOOP_RESTART_PAUSE * 1000));
+    };
+
+    const loopedSequence = async () => {
       // eslint-disable-next-line no-constant-condition
       while (true) {
-        await controls.start('visible');
-        // Simplified wait:
-        // Consider wordVariants.visible.transition.duration (0.5s)
-        // and sentenceVariants.visible.transition.staggerChildren (0.15s)
-        // Total time for all words to appear: delay (0.5) + (words.length * staggerChildren (0.15)) + last word duration (0.5)
-        // Exit: staggerChildren (0.1) + last word exit duration (0.4)
-        const visibleDuration = (sentenceVariants.visible.transition.delay || 0) * 1000 + 
-                                (words.length * (sentenceVariants.visible.transition.staggerChildren || 0)) * 1000 +
-                                (wordVariants.visible.transition.duration || 0) * 1000;
-        await new Promise(resolve => setTimeout(resolve, visibleDuration + 500)); // Hold visible a bit longer
-
-        await controls.start('exit');
-        const exitDuration = (words.length * (sentenceVariants.exit.transition.staggerChildren || 0)) * 1000 +
-                             (wordVariants.exit.transition.duration || 0) * 1000;
-        await new Promise(resolve => setTimeout(resolve, exitDuration + 500)); // Hold exited a bit longer
-        
-        await controls.start('hidden'); 
-        await new Promise(resolve => setTimeout(resolve, 100)); // Brief pause
+        await sequence();
       }
     };
+
     if (slogan && words.length > 0) {
-      sequence();
+      if (LOOP_ANIMATION) {
+        loopedSequence();
+      } else {
+        sequence();
+      }
     }
-  }, [controls, slogan, words.length]);
+  }, [controls, slogan, words, LOOP_ANIMATION, SENTENCE_INITIAL_DELAY, STAGGER_CHILDREN_APPEAR, WORD_APPEAR_DURATION, SENTENCE_VISIBLE_HOLD_ADDITIONAL, STAGGER_CHILDREN_EXIT, WORD_EXIT_DURATION, SENTENCE_EXIT_HOLD_ADDITIONAL, SENTENCE_LOOP_RESTART_PAUSE]);
 
   return (
     <div className="banner-text py-8 text-center">
       <motion.h1
-        className="text-3xl font-sans font-light mb-4 flex flex-wrap justify-center min-h-[3em]" // Added min-h for layout stability
+        className="text-3xl font-sans font-light mb-4 flex flex-wrap justify-center min-h-[3em]"
         variants={sentenceVariants}
         initial="hidden"
         animate={controls}
-        aria-label={slogan} // For accessibility
+        aria-label={slogan}
       >
         {words.map((word, index) => (
           <motion.span
-            key={`${word}-${index}`} // More robust key
+            key={`${word}-${index}`}
             variants={wordVariants}
-            className="mr-2" // Tailwind class for margin-right: 0.5rem (adjust if space is part of word)
+            className="mr-2"
           >
             {word}
           </motion.span>
