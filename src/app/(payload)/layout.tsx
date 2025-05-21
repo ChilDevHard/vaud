@@ -4,7 +4,7 @@ import config from '@payload-config'
 import '@payloadcms/next/css'
 import type { ServerFunctionClient } from 'payload'
 import { handleServerFunctions, RootLayout } from '@payloadcms/next/layouts'
-import React from 'react'
+import React, { Children } from 'react' // Added Children for type safety, though not strictly necessary for this change
 
 import { importMap } from './admin/importMap.js'
 import './custom.scss'
@@ -22,10 +22,16 @@ const serverFunction: ServerFunctionClient = async function (args) {
   })
 }
 
-const Layout = ({ children }: Args) => (
-  <RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
-    {children}
-  </RootLayout>
-)
+const Layout = ({ children }: Args) => {
+  return (
+    <html lang="en">
+      <body suppressHydrationWarning={true}>
+        <RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
+          {children}
+        </RootLayout>
+      </body>
+    </html>
+  )
+}
 
 export default Layout
