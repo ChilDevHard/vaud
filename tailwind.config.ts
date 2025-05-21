@@ -5,6 +5,10 @@ module.exports = {
       fontFamily: {
         sans: ['Helvetica', 'Arial', 'sans-serif'],
       },
+      keyframes: {
+      },
+      animation: {
+      }
     },
   },
   plugins: [require('tw-animate-css')],
