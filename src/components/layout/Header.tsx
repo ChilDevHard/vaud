@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import NotificationStripe from '@/components/custom/NotificationStripe'
+import { t } from '@/lib/i18n'
 
+const designedForPeople = await t('designed_for_platform_people', 'fr')
 export default function Header() {
   return (
     <header className="w-full bg-[#009B4D] text-white shadow-md">
