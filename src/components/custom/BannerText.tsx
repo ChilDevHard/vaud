@@ -4,20 +4,19 @@ import { motion, useAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 
 export default function BannerText({ slogan }: { slogan: string }) {
-  const WORD_APPEAR_DURATION = 2
+  const WORD_APPEAR_DURATION = 1 //duration of ofimation
   const WORD_EXIT_DURATION = 0.4
-  const WORD_X_OFFSET = 20
+  const WORD_X_OFFSET = 10
   const WORD_APPEAR_EASE = 'easeOut'
   const WORD_EXIT_EASE = 'easeIn'
 
-  const STAGGER_CHILDREN_APPEAR = 0.15
+  const STAGGER_CHILDREN_APPEAR = 2.5 //delay between words inside animation
   const STAGGER_CHILDREN_EXIT = 0.1
 
   const SENTENCE_INITIAL_DELAY = 2.5
-  const SENTENCE_VISIBLE_HOLD_ADDITIONAL = 0.5
+  const SENTENCE_VISIBLE_HOLD_ADDITIONAL = 10.5
   const SENTENCE_EXIT_HOLD_ADDITIONAL = 0.5
-  const SENTENCE_LOOP_RESTART_PAUSE = 0.1
-
+  const SENTENCE_LOOP_RESTART_PAUSE = 2
   const LOOP_ANIMATION = true
 
   const sentenceVariants = {
